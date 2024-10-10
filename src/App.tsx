@@ -118,7 +118,7 @@ function App() {
       </div>
       <div style={{ margin: 240, padding: 32, background: "#fefefe3f" }}>
         <div>
-          Contract Address: <code>{deployment.address}</code>
+          Contract Address: <code><a href={`https://explorer.toliman.suave.flashbots.net/address/${deployment.address}`} target="_blank">{deployment.address}</a></code>
           {theNumber ? <div style={{ display: "flex", flexDirection: "row", fontSize: 21 }}>Current Number:
             <div style={{ paddingLeft: 8 }}>{waitingForReceipt ? " loading..." : <code style={{ color: "#ff2", textShadow: "#777 1px 0 3px" }}>{theNumber.toString()}</code>}</div>
           </div> : null}
