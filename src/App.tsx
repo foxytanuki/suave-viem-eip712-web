@@ -85,24 +85,7 @@ function App() {
       const txHash = await suaveProvider.sendRawTransaction({ serializedTransaction: signedTx })
 
       setWaitingForReceipt(true)
-      let receipt
-      const maxRetries = 10;
-      for (let i = 0; i < maxRetries; i++) {
-        // Wait 1 second
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        try {
-          receipt = await suaveProvider.getTransactionReceipt({ hash: txHash })
-        } catch (e) {
-          console.error("error", e)
-        }
-        if (receipt) {
-          break
-        }
-        // If this is the last attempt, throw an error
-        if (i === maxRetries - 1) {
-          throw new Error("Failed to get transaction receipt after 10 attempts")
-        }
-      }
+      const receipt = await suaveProvider.waitForTransactionReceipt({ hash: txHash })
       console.log("receipt", receipt)
       if (receipt.status === "success") {
         fetchNumber()
