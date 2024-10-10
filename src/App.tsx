@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { ProviderMessage, custom, encodeAbiParameters, encodeFunctionData, hexToBigInt, zeroAddress } from '@flashbots/suave-viem'
 import { getSuaveProvider, getSuaveWallet, type TransactionRequestSuave } from "@flashbots/suave-viem/chains/utils"
-import { suaveRigil } from "@flashbots/suave-viem/chains"
+import { suaveToliman } from "@flashbots/suave-viem/chains"
 import { Hex, http } from '@flashbots/suave-viem';
 import deployment from "./contracts/deployment.json"
 
@@ -17,7 +17,7 @@ function App() {
 
   useEffect(() => {
     if (!suaveProvider) {
-      setSuaveProvider(getSuaveProvider(http("http://localhost:8545")))
+      setSuaveProvider(getSuaveProvider(http(suaveToliman.rpcUrls.default.http[0])))
     }
     if ("ethereum" in window && !ethereum) {
       setEthereum(window.ethereum)
@@ -68,7 +68,7 @@ function App() {
       to: deployment.address as Hex,
       data: "0x4154b243" as Hex,
       confidentialInputs: encodeAbiParameters([{ type: "uint256" }], [BigInt(theNumberInput || 0)]),
-      kettleAddress: "0xB5fEAfbDD752ad52Afb7e1bD2E40432A485bBB7F",
+      kettleAddress: "0xf579de142d98f8379c54105ac944fe133b7a17fe",
       type: "0x43",
       nonce,
       gas: 69000n,
@@ -118,7 +118,7 @@ function App() {
       </div>
       <div style={{ margin: 240, padding: 32, background: "#fefefe3f" }}>
         <div>
-          Contract Address: <code><a href={`https://explorer.toliman.suave.flashbots.net/address/${deployment.address}`} target="_blank">{deployment.address}</a></code>
+          Contract Address: <code><a href={suaveToliman.blockExplorers.default.url + "/address/" + deployment.address} target="_blank">{deployment.address}</a></code>
           {theNumber ? <div style={{ display: "flex", flexDirection: "row", fontSize: 21 }}>Current Number:
             <div style={{ paddingLeft: 8 }}>{waitingForReceipt ? " loading..." : <code style={{ color: "#ff2", textShadow: "#777 1px 0 3px" }}>{theNumber.toString()}</code>}</div>
           </div> : null}
