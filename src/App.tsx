@@ -86,12 +86,21 @@ function App() {
 
       setWaitingForReceipt(true)
       let receipt
-      while (true) {
-        // wait 2 seconds
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        receipt = await suaveProvider.getTransactionReceipt({ hash: txHash })
+      const maxRetries = 10;
+      for (let i = 0; i < maxRetries; i++) {
+        // Wait 1 second
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        try {
+          receipt = await suaveProvider.getTransactionReceipt({ hash: txHash })
+        } catch (e) {
+          console.error("error", e)
+        }
         if (receipt) {
           break
+        }
+        // If this is the last attempt, throw an error
+        if (i === maxRetries - 1) {
+          throw new Error("Failed to get transaction receipt after 10 attempts")
         }
       }
       console.log("receipt", receipt)
@@ -104,6 +113,7 @@ function App() {
     } catch (e) {
       console.error("error", e)
       alert(e)
+      setWaitingForReceipt(false)
     }
   }
 
